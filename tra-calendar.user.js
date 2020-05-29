@@ -64,7 +64,7 @@ function injectButtons() {
             class: "icon-fa icon-calendar"
         })
         calendarBtn.addEventListener('click', x => {
-            GM_openInTab(x.srcElement.getAttribute('calendar-uri'), false);
+            GM_openInTab(x.target.getAttribute('calendar-uri'), false);
         })
     });
 }
