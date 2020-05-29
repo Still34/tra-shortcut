@@ -12,13 +12,10 @@
 // ==/UserScript==
 
 const stationRegex = /\d{1,4}|-/g;
-const dateRegex = /[\-|\:|\.]/g;
 
 function getCalendarUri(name, startDate, endDate, fromLocation = undefined, description = undefined) {
     let calendarUri = getBaseCalendarUri();
     calendarUri.searchParams.append('text', name);
-    startDate = startDate.replace(/000Z/g, 'Z');
-    endDate = endDate.replace(/000Z/g, 'Z');
     calendarUri.searchParams.append('dates', `${startDate}/${endDate}`);
     if (description) {
         calendarUri.searchParams.append('details', description)
@@ -45,15 +42,15 @@ function injectButtons() {
     const tripDate = tripDateNode.value;
     document.querySelectorAll('.trip-column').forEach(tripColumn => {
         let rideIdNode = tripColumn.querySelector('a[href*="querybytrainno"]');
-        if (!rideIdNode) {
-            throw "Ride ID node not found."
+        if (!rideIdNode || tripColumn.childElementCount < 3) {
+            return;
         }
         let rideId = rideIdNode.textContent;
         let startTime = tripColumn.children[1].textContent;
         let endTime = tripColumn.children[2].textContent;
-        let tripName = `${rideId} ➡ ${endStation}`;
-        let rideStartDate = new Date(`${tripDate} ${startTime}`).toISOString().replace(dateRegex, '');
-        let rideEndDate = new Date(`${tripDate} ${endTime}`).toISOString().replace(dateRegex, '');
+        let tripName = `${rideId}: ${startStation} ➡ ${endStation}`;
+        let rideStartDate = getFormattedDate(new Date(`${tripDate} ${startTime}`));
+        let rideEndDate = getFormattedDate(new Date(`${tripDate} ${endTime}`));
         let buttonCell = make({ el: 'td', appendTo: tripColumn });
         let calendarBtn = make({
             el: 'button',
@@ -67,6 +64,12 @@ function injectButtons() {
             GM_openInTab(x.target.getAttribute('calendar-uri'), false);
         })
     });
+}
+function getFormattedDate(date){
+    return date
+        .toISOString()
+        .replace(/[\-|\:|\.]/g, '')
+        .replace(/000Z/g, 'Z');
 }
 
 injectButtons();
@@ -83,11 +86,8 @@ function make(obj) {
         el.className = obj.class;
     }
     if (obj.text) {
-        let textnode = document.createTextNode(obj.text);
-        el.appendChild(textnode);
-    }
-    if (obj.html) {
-        el.innerHTML = obj.html;
+        let textNode = document.createTextNode(obj.text);
+        el.appendChild(textNode);
     }
     if (obj.attr) {
         for (key in obj.attr) {
