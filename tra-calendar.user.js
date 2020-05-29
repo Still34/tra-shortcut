@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name        TRA Calendar Shortcut
-// @version     1.0.0
+// @version     1.0.1
 // @description Adds Google Calendar shortcut to the Taiwan Railway Administration timetable
 // @license     MIT
 // @author      Still Hsu
 // @include     https://www.railway.gov.tw/tra-tip-web/*/*/*/querybytime
 // @inject-into content
+// @downloadUrl https://raw.githubusercontent.com/Still34/tra-shortcut/master/tra-calendar.user.js
+// @updateUrl https://raw.githubusercontent.com/Still34/tra-shortcut/master/tra-calendar.user.js
 // @grant GM_openInTab
 // ==/UserScript==
 
