@@ -1,6 +1,6 @@
 // ==UserScript==
 // @name        TRA Calendar Shortcut
-// @version     1.0.2
+// @version     1.0.3
 // @description Adds Google Calendar shortcut to the Taiwan Railway Administration timetable
 // @license     MIT
 // @author      Still Hsu
@@ -51,7 +51,7 @@ function injectButtons() {
         let rideId = rideIdNode.textContent;
         let startTime = tripColumn.children[1].textContent;
         let endTime = tripColumn.children[2].textContent;
-        let tripName = `${rideId}至${endStation}`;
+        let tripName = `${rideId} ➡ ${endStation}`;
         let rideStartDate = new Date(`${tripDate} ${startTime}`).toISOString().replace(dateRegex, '');
         let rideEndDate = new Date(`${tripDate} ${endTime}`).toISOString().replace(dateRegex, '');
         let buttonCell = make({ el: 'td', appendTo: tripColumn });
@@ -59,7 +59,7 @@ function injectButtons() {
             el: 'button',
             appendTo: buttonCell,
             attr: {
-                "calendar-uri": getCalendarUri(tripName, rideStartDate, rideEndDate, `${startStation}火車站`)
+                "calendar-uri": getCalendarUri(tripName, rideStartDate, rideEndDate, `${startStation} Train Station`)
             },
             class: "icon-fa icon-calendar"
         })
